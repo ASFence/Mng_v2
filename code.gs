@@ -145,14 +145,12 @@ function doPost(e) {
 
 // ── JSON 응답 (CORS 헤더) ─────────────────────
 function jsonResponse(data, origin, cfg) {
-  const allowedOrigin = (cfg && cfg.ALLOWED_ORIGINS.includes(origin))
-    ? origin
-    : '*';
-
+  // Apps Script redirect changes Origin to null; '*' is the only reliable CORS value.
+  // Security is handled by API token, not CORS origin restriction.
   return ContentService
     .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON)
-    .setHeader('Access-Control-Allow-Origin', allowedOrigin)
+    .setHeader('Access-Control-Allow-Origin', '*')
     .setHeader('Access-Control-Allow-Methods', 'GET, POST')
     .setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Token');
 }
