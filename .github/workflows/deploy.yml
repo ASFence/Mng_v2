@@ -1,0 +1,94 @@
+# =============================================
+# .github/workflows/deploy.yml
+# =============================================
+# GitHub Secrets에 저장된 값을 빌드 시 index.html에 주입하고
+# GitHub Pages로 자동 배포합니다.
+#
+# ★ 사전 준비:
+#   GitHub 저장소 → Settings → Secrets and variables → Actions
+#   아래 Secrets를 추가하세요:
+#
+#   Secret 이름              | 값 예시
+#   -------------------------|----------------------------------------
+#   APPS_SCRIPT_URL          | https://script.google.com/macros/s/.../exec
+#   API_TOKEN                | (32자 이상 랜덤 문자열)
+#
+# ★ 동작 방식:
+#   index.template.html의 __API_URL__, __API_TOKEN__ 플레이스홀더를
+#   Secrets 값으로 치환 → index.html 생성 → GitHub Pages 배포
+# =============================================
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]          # main 브랜치 push 시 자동 배포
+  workflow_dispatch:            # 수동 실행 가능
+
+permissions:
+  contents: read
+  pages   : write
+  id-token: write
+
+concurrency:
+  group            : "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url : ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+
+      # 1) 소스 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2) Secrets → index.html 주입
+      #    index.template.html의 플레이스홀더를 실제 값으로 치환
+      - name: Inject Secrets into index.html
+        env:
+          API_URL  : ${{ secrets.APPS_SCRIPT_URL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+        run: |
+          set +x
+          # 플레이스홀더 치환
+          sed -e "s|__API_URL__|${API_URL}|g" \
+              -e "s|__API_TOKEN__|${API_TOKEN}|g" \
+              index.template.html > index.html
+
+          echo "✅ index.html 생성 완료"
+
+          # 보안 확인: 플레이스홀더가 남아있으면 배포 중단
+          if grep -q "__API_URL__\|__API_TOKEN__" index.html; then
+            echo "❌ 오류: Secrets가 주입되지 않았습니다."
+            echo "   GitHub Secrets에 APPS_SCRIPT_URL, API_TOKEN을 설정하세요."
+            exit 1
+          fi
+
+          # 생성된 파일에 민감 정보 노출 여부 간단 확인 (로그에는 마스킹)
+          echo "생성된 index.html 크기: $(wc -c < index.html) bytes"
+
+      # 3) 배포 디렉토리 구성 (index.html만 배포)
+      - name: Prepare dist directory
+        run: |
+          mkdir -p dist
+          cp index.html dist/index.html
+
+      # 4) GitHub Pages 설정
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # 5) 빌드 결과물 업로드
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist'
+
+      # 6) 배포
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

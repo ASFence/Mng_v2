@@ -1,0 +1,33 @@
+# =============================================
+# .gitignore — 복무관리 웹앱
+# =============================================
+
+# ★★★ 절대 커밋 금지 ★★★
+# GitHub Actions가 빌드한 결과물 (실제 API 키 포함)
+index.html
+
+# 로컬 개발용 환경변수 파일
+.env
+.env.local
+.env.development
+.env.production
+
+# 편집기 / OS 임시파일
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
+
+# =============================================
+# [안내]
+# 저장소에 커밋되는 파일:
+#   - index.template.html  (플레이스홀더 포함 템플릿)
+#   - code.gs              (PropertiesService 사용, 시크릿 없음)
+#   - .github/workflows/deploy.yml
+#   - .gitignore
+#
+# 커밋되지 않는 파일:
+#   - index.html           (빌드 결과물, 실제 키 포함)
+#   - .env*                (로컬 환경변수)
+# =============================================
