@@ -11,6 +11,8 @@ index.html
 .env.local
 .env.development
 .env.production
+code.gs
+CLAUDE.md
 
 # 편집기 / OS 임시파일
 .DS_Store
