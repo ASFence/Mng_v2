@@ -7,22 +7,9 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src https://script.google.com https://script.googleusercontent.com https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self';">
   <!--
     =====================================================
-    복무관리 시스템 - index.template.html
+    현장관리 시스템 - index.template.html
     =====================================================
-    ★ 이 파일은 템플릿입니다. 직접 배포하지 마세요.
     
-    GitHub Actions(deploy.yml)가 빌드 시
-    아래 플레이스홀더를 GitHub Secrets 값으로 자동 치환합니다:
-      __API_URL__   → secrets.APPS_SCRIPT_URL
-      __API_TOKEN__ → secrets.API_TOKEN
-    
-    결과물: index.html (GitHub Pages 배포용)
-    
-    [로컬 개발 시]
-    .env.local 파일을 만들고 직접 값을 입력하거나,
-    아래 CONFIG의 플레이스홀더를 직접 수정해서 테스트하세요.
-    단, 수정된 index.html을 절대 git에 커밋하지 마세요.
-    =====================================================
   -->
   <title>차단시설물 점검시스템</title>
   <script>if(window.top!==window.self){window.top.location=window.self.location;}</script>
@@ -173,11 +160,11 @@
   <div class="modal">
     <h2>위치정보 수집 동의</h2>
     <div class="modal-body">
-      본 앱은 복무관리 목적으로 아래와 같이 위치정보를 수집합니다.<br><br>
+      본 앱은 현장관리 목적으로 아래와 같이 위치정보를 수집합니다.<br><br>
       <table class="modal-table">
         <tr><th>수집 항목</th><td>GPS 위도·경도, QR 위치정보</td></tr>
-        <tr><th>수집 목적</th><td>복무 위치 기록 및 관리</td></tr>
-        <tr><th>보유 기간</th><td>복무 종료 후 1년</td></tr>
+        <tr><th>수집 목적</th><td>차단시설물 위치 기록 및 관리</td></tr>
+        <tr><th>보유 기간</th><td>단년도 사업 종료 후 1년</td></tr>
         <tr><th>제3자 제공</th><td>제공하지않음</td></tr>
       </table>
       <strong>동의하지 않으시면 GPS 기록 기능을 사용할 수 없습니다.</strong>
@@ -190,7 +177,7 @@
 </div>
 
 <header>
-  <h1>복무관리 시스템</h1>
+  <h1>ASF차단시설물 관리 시스템</h1>
   <p>QR 스캔 및 위치 기록</p>
   <div class="header-badge"><span class="dot"></span><span id="headerUser">사용자 미설정</span></div>
 </header>
